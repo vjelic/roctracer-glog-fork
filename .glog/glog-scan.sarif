@@ -1,0 +1,363 @@
+{
+  "version": "2.1.0",
+  "runs": [
+    {
+      "tool": {
+        "driver": {
+          "name": "Glog.AI",
+          "organization": "Glog.AI",
+          "fullName": "Glog, Making software more secure",
+          "version": "1.0.0",
+          "semanticVersion": "1.0.0",
+          "informationUri": "https://www.glog.ai",
+          "rules": [
+            {
+              "id": "glog-e1742a5d-405b-41b4-a561-b5b0a3fb506c",
+              "help": {
+                "text": "",
+                "markdown": "## Description\n\nThe `strlen()` function in C and C++ is used to find the length of a string. However, it can lead to vulnerabilities if not used properly. The function counts the number of characters in a string until it reaches a null character (`'\\0'`). If the string is not null-terminated, `strlen()` will continue reading memory until it encounters a null character, which can lead to buffer overflows, memory corruption, and other undefined behavior.\n\n## Mitigation Advice\n\nTo mitigate this vulnerability, always ensure that your strings are null-terminated. Avoid using `strlen()` on strings that may not be null-terminated. Instead, consider using functions that take the size of the buffer as an argument, such as `strnlen()`, which will not read past the specified length.\n\n## Source Code Fix Recommendation\n\nInstead of using `strlen(tag)`, use `strnlen(tag, MAX_LENGTH)`, where `MAX_LENGTH` is the maximum length of the string that you expect. This will prevent `strnlen()` from reading past the end of the buffer.\n\n```cpp\n#include <string.h>\n\n#define MAX_LENGTH 100\n\n// ...\n\nchar tag[MAX_LENGTH];\n// ...\nsize_t len = strnlen(tag, MAX_LENGTH);\n```\n\n## Library Dependencies\n\nThe `strlen()` and `strnlen()` functions are part of the C standard library, so you need to include the `<string.h>` header file.\n\n## References\n\n- [OWASP C/C++ Vulnerabilities](https://owasp.org/www-pdf-archive/OWASP_SCP_Quick_Reference_Guide_v2.pdf)\n- [CWE-126: Buffer Over-read](https://cwe.mitre.org/data/definitions/126.html)"
+              },
+              "properties": {
+                "tags": [
+                  "DS140021"
+                ]
+              }
+            },
+            {
+              "id": "glog-0fba25cb-d85d-4d16-be3b-06437008d7fc",
+              "help": {
+                "text": "",
+                "markdown": "## Description\n\nThe `memcpy` function in C++ is used to copy a block of memory from one location to another. This function is vulnerable to buffer overflow attacks if the size of the data being copied is larger than the size of the destination buffer. In the provided code snippet, `memcpy(record_ptr_, &record, sizeof(Record))`, if the size of `record` is larger than the size of `record_ptr_`, it can lead to a buffer overflow.\n\nBuffer overflow vulnerabilities can lead to various security issues such as data corruption, system crash, or even arbitrary code execution.\n\n## Mitigation Advice\n\nTo mitigate this vulnerability, you should always ensure that the destination buffer is large enough to hold the data being copied. This can be done by checking the size of the data and the size of the buffer before calling `memcpy`.\n\nAdditionally, consider using safer alternatives to `memcpy` such as `strncpy` or `memcpy_s` (in C11) which include the size of the destination as a parameter, reducing the risk of buffer overflow.\n\n## Source Code Fix Recommendation\n\nHere is a safer version of the code using `strncpy`:\n\n```cpp\n#include <cstring> // for strncpy\n\n// Ensure record_ptr_ is large enough to hold record\nif (sizeof(record_ptr_) >= sizeof(record)) {\n    strncpy(record_ptr_, &record, sizeof(record));\n} else {\n    // Handle error: destination buffer is too small\n}\n```\n\n## Library Dependencies\n\nThe code example requires the `<cstring>` library for the `strncpy` function.\n\n## References\n\n- [OWASP Buffer Overflow](https://owasp.org/www-community/vulnerabilities/Buffer_Overflow)\n- [CWE-120: Buffer Copy without Checking Size of Input ('Classic Buffer Overflow')](https://cwe.mitre.org/data/definitions/120.html)"
+              },
+              "properties": {
+                "tags": [
+                  "DS121708"
+                ]
+              }
+            },
+            {
+              "id": "glog-3dea03e2-aff0-4aed-a5b1-5e0284449d97",
+              "help": {
+                "text": "",
+                "markdown": "## Description\n\nThe `memcpy` function in C++ is used to copy a block of memory from one location to another. This function is vulnerable to buffer overflow attacks if the size of the data being copied is larger than the size of the destination buffer. This can lead to corruption of valid data, crash the application, or in worst case scenarios, allow an attacker to execute arbitrary code.\n\n## Mitigation Advice\n\nTo mitigate this vulnerability, it is recommended to always ensure that the destination buffer is large enough to hold the data being copied. This can be done by checking the size of the data and the size of the buffer before calling `memcpy`. \n\nAdditionally, consider using safer alternatives to `memcpy` such as `strncpy` or `memcpy_s` (in C11) which are designed to prevent buffer overflow by including the size of the destination buffer as a parameter.\n\n## Source Code Fix Recommendation\n\nHere is a simple fix for the vulnerability:\n\n```cpp\nif (data_size <= sizeof(data_ptr_)) {\n    memcpy(data_ptr_, data, data_size);\n} else {\n    // Handle error\n}\n```\n\nIn this code, we first check if the size of the data is less than or equal to the size of the destination buffer. If it is, we proceed with the `memcpy`. If it is not, we handle the error in a way that is appropriate for the specific application.\n\n## Library Dependencies\n\nThe `memcpy` function is part of the C Standard Library, so no additional libraries are needed for this code to execute properly.\n\n## References\n\n- [OWASP Buffer Overflow Attack](https://owasp.org/www-community/attacks/Buffer_overflow_attack)\n- [CWE-120: Buffer Copy without Checking Size of Input ('Classic Buffer Overflow')](https://cwe.mitre.org/data/definitions/120.html)"
+              },
+              "properties": {
+                "tags": [
+                  "DS121708"
+                ]
+              }
+            },
+            {
+              "id": "glog-b3265422-e93f-4fc3-8d86-b6e6f82ee7bd",
+              "help": {
+                "text": "",
+                "markdown": "## Description\n\nThe `strlen()` function in C++ is used to find the length of a string. However, it can lead to vulnerabilities if not used properly. The function counts the number of characters in a string until it reaches a null character (`\\0`). If the string is not null-terminated, `strlen()` will continue reading memory until it encounters a null character, which can lead to buffer overflows, memory corruption, and other security issues.\n\n## Mitigation Advice\n\nTo mitigate this vulnerability, always ensure that strings are null-terminated. Avoid using `strlen()` on strings that may not be null-terminated. Instead, use safer alternatives that limit the number of characters read from the string, such as `strnlen()`. \n\n## Source Code Fix Recommendation\n\nReplace `strlen(record->kernel_name)` with `strnlen(record->kernel_name, MAX_LENGTH)`, where `MAX_LENGTH` is the maximum expected length of `kernel_name`.\n\n```cpp\n// Assuming MAX_LENGTH is defined and is the maximum length of kernel_name\nsize_t length = strnlen(record->kernel_name, MAX_LENGTH);\n```\n\n## Library Dependencies\n\nThe code example requires the `<cstring>` library for the `strlen()` function.\n\n## References\n\n- [OWASP C++ Secure Coding Practices](https://cheatsheetseries.owasp.org/cheatsheets/C-Based_Toolchain_Hardening_Cheat_Sheet.html)\n- [CWE-126: Buffer Over-read](https://cwe.mitre.org/data/definitions/126.html)\n\nPlease note that the links provided are accessible to anonymous users at the time of writing this report."
+              },
+              "properties": {
+                "tags": [
+                  "DS140021"
+                ]
+              }
+            }
+          ],
+          "language": "en-US",
+          "contents": [
+            "localizedData",
+            "nonLocalizedData"
+          ],
+          "isComprehensive": false
+        }
+      },
+      "language": "en-US",
+      "results": [
+        {
+          "ruleId": "glog-11576b03-d55c-443d-881c-6135cd21774c",
+          "kind": "fail",
+          "level": "note",
+          "message": {
+            "text": "\"Detected Issue with C Function (malloc)\""
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "src/roctracer/memory_pool.h"
+                },
+                "region": {
+                  "startLine": 203,
+                  "startColumn": 37,
+                  "endLine": 203,
+                  "endColumn": 49,
+                  "charOffset": 8161,
+                  "charLength": 12,
+                  "snippet": {
+                    "text": "malloc(size)",
+                    "rendered": {
+                      "text": "malloc(size)",
+                      "markdown": "`malloc(size)`"
+                    }
+                  },
+                  "sourceLanguage": "c"
+                }
+              }
+            }
+          ],
+          "fixes": [
+            {
+              "description": {
+                "text": "If the value provided to malloc is the result of unsafe integer math, it can result in an exploitable condition. "
+              },
+              "artifactChanges": [
+                {
+                  "artifactLocation": {
+                    "uri": "src/roctracer/memory_pool.h"
+                  },
+                  "replacements": [
+                    {
+                      "deletedRegion": {
+                        "charOffset": 8161,
+                        "charLength": 12
+                      },
+                      "insertedContent": {
+                        "text": "calloc(<number of elements>, <size of each element>)"
+                      }
+                    }
+                  ]
+                }
+              ]
+            }
+          ],
+          "properties": {
+            "DevSkimSeverity": "BestPractice",
+            "DevSkimConfidence": "High",
+            "tags": [
+              "API.DangerousAPI.ProblematicFunction"
+            ]
+          }
+        },
+        {
+          "ruleId": "glog-0fba25cb-d85d-4d16-be3b-06437008d7fc",
+          "kind": "fail",
+          "level": "note",
+          "message": {
+            "text": "Detected Vulnerability in C Function (memcpy)"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "src/roctracer/memory_pool.h"
+                },
+                "region": {
+                  "startLine": 109,
+                  "startColumn": 6,
+                  "endLine": 109,
+                  "endColumn": 49,
+                  "charOffset": 4400,
+                  "charLength": 43,
+                  "snippet": {
+                    "text": "memcpy(record_ptr_, &record, sizeof(Record)",
+                    "rendered": {
+                      "text": "memcpy(record_ptr_, &record, sizeof(Record)",
+                      "markdown": "`memcpy(record_ptr_, &record, sizeof(Record)`"
+                    }
+                  },
+                  "sourceLanguage": "c"
+                }
+              }
+            }
+          ],
+          "fixes": [
+            {
+              "description": {
+                "text": "There are a number of conditions in which memcpy can introduce a vulnerability (mismatched buffer sizes, null pointers, etc.). More secure alternitives perform additional validation of the source and destination buffer"
+              },
+              "artifactChanges": [
+                {
+                  "artifactLocation": {
+                    "uri": "src/roctracer/memory_pool.h"
+                  },
+                  "replacements": [
+                    {
+                      "deletedRegion": {
+                        "charOffset": 4400,
+                        "charLength": 43
+                      },
+                      "insertedContent": {
+                        "text": "memcpy_s(record_ptr_, <size of record_ptr_>,  &record,  sizeof(Record)"
+                      }
+                    }
+                  ]
+                }
+              ]
+            }
+          ],
+          "properties": {
+            "DevSkimSeverity": "BestPractice",
+            "DevSkimConfidence": "High",
+            "tags": [
+              "API.DangerousAPI.ProblematicFunction"
+            ]
+          }
+        },
+        {
+          "ruleId": "glog-3dea03e2-aff0-4aed-a5b1-5e0284449d97",
+          "kind": "fail",
+          "level": "note",
+          "message": {
+            "text": "Detected Vulnerability in C Function (memcpy)"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "src/roctracer/memory_pool.h"
+                },
+                "region": {
+                  "startLine": 102,
+                  "startColumn": 8,
+                  "endLine": 102,
+                  "endColumn": 42,
+                  "charOffset": 4174,
+                  "charLength": 34,
+                  "snippet": {
+                    "text": "memcpy(data_ptr_, data, data_size)",
+                    "rendered": {
+                      "text": "memcpy(data_ptr_, data, data_size)",
+                      "markdown": "`memcpy(data_ptr_, data, data_size)`"
+                    }
+                  },
+                  "sourceLanguage": "c"
+                }
+              }
+            }
+          ],
+          "fixes": [
+            {
+              "description": {
+                "text": "There are a number of conditions in which memcpy can introduce a vulnerability (mismatched buffer sizes, null pointers, etc.). More secure alternitives perform additional validation of the source and destination buffer"
+              },
+              "artifactChanges": [
+                {
+                  "artifactLocation": {
+                    "uri": "src/roctracer/memory_pool.h"
+                  },
+                  "replacements": [
+                    {
+                      "deletedRegion": {
+                        "charOffset": 4174,
+                        "charLength": 34
+                      },
+                      "insertedContent": {
+                        "text": "memcpy_s(data_ptr_, <size of data_ptr_>,  data,  data_size)"
+                      }
+                    }
+                  ]
+                }
+              ]
+            }
+          ],
+          "properties": {
+            "DevSkimSeverity": "BestPractice",
+            "DevSkimConfidence": "High",
+            "tags": [
+              "API.DangerousAPI.ProblematicFunction"
+            ]
+          }
+        },
+        {
+          "ruleId": "glog-b3265422-e93f-4fc3-8d86-b6e6f82ee7bd",
+          "kind": "fail",
+          "level": "note",
+          "message": {
+            "text": "Detected Vulnerability in C Function (strlen)"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "src/roctracer/roctracer.cpp"
+                },
+                "region": {
+                  "startLine": 393,
+                  "startColumn": 57,
+                  "endLine": 393,
+                  "endColumn": 84,
+                  "charOffset": 15458,
+                  "charLength": 27,
+                  "snippet": {
+                    "text": "strlen(record->kernel_name)",
+                    "rendered": {
+                      "text": "strlen(record->kernel_name)",
+                      "markdown": "`strlen(record->kernel_name)`"
+                    }
+                  },
+                  "sourceLanguage": "cpp"
+                }
+              }
+            }
+          ],
+          "fixes": [
+            {
+              "description": {
+                "text": "If a string is missing a null terminator, strlen will read past the end of the buffer"
+              },
+              "artifactChanges": [
+                {
+                  "artifactLocation": {
+                    "uri": "src/roctracer/roctracer.cpp"
+                  },
+                  "replacements": [
+                    {
+                      "deletedRegion": {
+                        "charOffset": 15458,
+                        "charLength": 27
+                      },
+                      "insertedContent": {
+                        "text": "strlen_s(record->kernel_name, <size of record->kernel_name>)"
+                      }
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "description": {
+                "text": "If a string is missing a null terminator, strlen will read past the end of the buffer"
+              },
+              "artifactChanges": [
+                {
+                  "artifactLocation": {
+                    "uri": "src/roctracer/roctracer.cpp"
+                  },
+                  "replacements": [
+                    {
+                      "deletedRegion": {
+                        "charOffset": 15458,
+                        "charLength": 27
+                      },
+                      "insertedContent": {
+                        "text": "strnlen(record->kernel_name, <size of record->kernel_name>)"
+                      }
+                    }
+                  ]
+                }
+              ]
+            }
+          ],
+          "properties": {
+            "DevSkimSeverity": "BestPractice",
+            "DevSkimConfidence": "High",
+            "tags": [
+              "API.DangerousAPI.ProblematicFunction"
+            ]
+          }
+        }
+      ],
+      "newlineSequences": [
+        "\r\n",
+        "\n"
+      ]
+    }
+  ]
+}
